@@ -5,7 +5,7 @@
 You need to pre-install golang, git, and make from respective package.
 
 ##install golang:
-(You can use gvm (go version manager) by follow instructions on https://hackpad.com/install-golang-tV6LThskn9E)
+refer to https://golang.org/dl/
 
 ##install git:
 ```
