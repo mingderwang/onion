@@ -75,18 +75,23 @@ func (tr *OnionResource) BuildOnion(c *gin.Context) {
 	if tr.db.First(&onion, id).RecordNotFound() {
 		c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
 	} else {
-		genJsonToGo(onion.JsonSchema)
+		genJsonToGo(onion)
 		c.JSON(http.StatusOK, onion)
 	}
 }
 
-func genJsonToGo(jsonSchema string) {
-	output, _ := jsonToGo.Gen(jsonSchema, "test")
-	writeFile("/tmp/ming.go", output)
+func genJsonToGo(obj Onion) {
+	output, _ := jsonToGo.Gen(obj.JsonSchema, obj.TypeName)
+	writeFile("./workspace/"+obj.DomainName+"."+obj.TypeName, "onion.go", output)
 }
 
-func writeFile(filePath string, stream string) {
-	f, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, 0600)
+func writeFile(path string, fileName string, stream string) {
+	//check path
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		os.MkdirAll(path, os.ModePerm)
+	}
+
+	f, err := os.OpenFile(path+"/"+fileName, os.O_WRONLY|os.O_CREATE, 0600)
 	defer f.Close()
 	log.Print(err)
 	n3, err := f.WriteString(stream)
