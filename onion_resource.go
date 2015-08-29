@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"strconv"
 	"time"
 )
@@ -76,13 +77,24 @@ func (tr *OnionResource) BuildOnion(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
 	} else {
 		genJsonToGo(onion)
+		dockerize(onion)
 		c.JSON(http.StatusOK, onion)
 	}
 }
 
 func genJsonToGo(obj Onion) {
 	output, _ := jsonToGo.Gen(obj.JsonSchema, obj.TypeName)
-	writeFile("./workspace/"+obj.DomainName+"."+obj.TypeName, "onion.go", output)
+	writeFile("./workspace/"+obj.DomainName+"."+obj.TypeName+"/onion", "onion.go", output)
+}
+
+func dockerize(obj Onion) {
+	path := "./workspace/" + obj.DomainName + "." + obj.TypeName + "/onion"
+	command1 := path + "/runDocker.sh"
+	out, err := exec.Command(command1).Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("The pwd is %s\n", out)
 }
 
 func writeFile(path string, fileName string, stream string) {

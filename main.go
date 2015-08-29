@@ -6,7 +6,7 @@
 package main
 
 import (
-	"errors"
+	//"errors"
 	"io/ioutil"
 	"os"
 
@@ -15,17 +15,26 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+func defaultConfig() Config {
+	config := Config{":8080", "root", "", "localhost", "Onion.db", "", ""}
+	return config
+}
+
 func getConfig(c *cli.Context) (Config, error) {
 	yamlPath := c.GlobalString("config")
 	config := Config{}
 
 	if _, err := os.Stat(yamlPath); err != nil {
-		return config, errors.New("config path not valid")
+		//create default value
+		config = defaultConfig()
+		return config, nil
 	}
 
 	ymlData, err := ioutil.ReadFile(yamlPath)
 	if err != nil {
-		return config, err
+		// create default value
+		config = defaultConfig()
+		return config, nil
 	}
 
 	err = yaml.Unmarshal([]byte(ymlData), &config)
@@ -43,6 +52,26 @@ func init() {
 	log.SetLevel(log.WarnLevel)
 }
 
+func mainLoop(app *cli.App) {
+	app.Action = func(c *cli.Context) {
+		//host := c.GlobalString("host")
+		cfg, err := getConfig(c)
+		if err != nil {
+			log.WithFields(log.Fields{
+				"file:": "main.go",
+				"func:": "main",
+				"line:": 74,
+			}).Fatal("getConfig return error")
+			return
+		}
+		svc := OnionService{}
+
+		if err = svc.Run(cfg); err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "goslack"
@@ -54,29 +83,9 @@ func main() {
 		cli.StringFlag{"config, c", "config.yaml", "config file to use", "APP_CONFIG"},
 	}
 
+	mainLoop(app)
+
 	app.Commands = []cli.Command{
-		{
-			Name:  "serve",
-			Usage: "start micro service",
-			Action: func(c *cli.Context) {
-				//host := c.GlobalString("host")
-				cfg, err := getConfig(c)
-				if err != nil {
-					log.WithFields(log.Fields{
-						"file:": "main.go",
-						"func:": "main",
-						"line:": 74,
-					}).Fatal("getConfig return error")
-					return
-				}
-				svc := OnionService{}
-
-				if err = svc.Run(cfg); err != nil {
-					log.Fatal(err)
-				}
-
-			},
-		},
 		{
 			Name:  "migratedb",
 			Usage: "Perform database migrations",
@@ -98,5 +107,3 @@ func main() {
 
 	app.Run(os.Args)
 }
-
-
