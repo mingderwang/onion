@@ -1,3 +1,2 @@
 #!/bin/bash
-cd $1 
-./dockerize.sh
+cd $1; go generate
