@@ -88,13 +88,31 @@ func genJsonToGo(obj Onion) {
 }
 
 func dockerize(obj Onion) {
-	path := "./workspace/" + obj.DomainName + "." + obj.TypeName + "/onion"
-	command1 := path + "/dockerize.sh"
-	out, err := exec.Command(command1).Output()
+	command2 := "pwd"
+	out, err := exec.Command(command2).Output()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("The pwd is %s\n", out)
+	i := len(out)-1
+	outstring := string(out[:i])
+	path := outstring + "/workspace/" + obj.DomainName + "." + obj.TypeName + "/onion"
+	//command1 := path + "go generate"
+	command3 :=`docker.sh /`
+	out3, err3 := exec.Command(command3).Output()
+	if err3 != nil {
+		log.Fatal(err3)
+	}
+
+
+
+command1:=outstring + "/docker.sh "
+	out2, err2 := exec.Command(command1).Output()
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+	fmt.Println(path)
+	fmt.Println(out3)
+	fmt.Println(out2)
 }
 
 func writeFile(path string, fileName string, stream string) {
