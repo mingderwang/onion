@@ -89,7 +89,7 @@ func genJsonToGo(obj Onion) {
 
 func dockerize(obj Onion) {
 	path := "./workspace/" + obj.DomainName + "." + obj.TypeName + "/onion"
-	command1 := path + "/runDocker.sh"
+	command1 := path + "/dockerize.sh"
 	out, err := exec.Command(command1).Output()
 	if err != nil {
 		log.Fatal(err)
