@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o xtrace
 
 typeset -i variable=$(cat version)
 ((variable=variable+1))
@@ -20,7 +21,7 @@ go generate
 #./dockerize.sh
 
 
-docker build -t gcr.io/mitac-cust-gcp-1/demo-onion:v$variable .
-gcloud docker push gcr.io/mitac-cust-gcp-1/demo-onion:v$variable
-kubectl rolling-update demo-node --image=gcr.io/mitac-cust-gcp-1/demo-onion:v$variable
+time docker build -t gcr.io/mitac-cust-gcp-1/demo-onion:v$variable .
+time gcloud docker push gcr.io/mitac-cust-gcp-1/demo-onion:v$variable
+kubectl rolling-update demo-node --poll-interval="1us" --update-period="1us" --image=gcr.io/mitac-cust-gcp-1/demo-onion:v$variable
 
