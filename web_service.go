@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/tommy351/gin-cors"
 )
 
 type Config struct {
@@ -48,6 +49,7 @@ func (s *OnionService) Run(cfg Config) error {
 
 	r := gin.Default()
 	//gin.SetMode(gin.ReleaseMode)
+	r.Use(cors.Middleware(cors.Options{}))
 
 	r.GET("/onion", onionResource.GetAllOnions)
 	r.GET("/onion/:id", onionResource.GetOnion)

@@ -21,7 +21,7 @@ go generate
 #./dockerize.sh
 
 
-time docker build -t gcr.io/mitac-cust-gcp-1/demo-onion:v$variable .
-time gcloud docker push gcr.io/mitac-cust-gcp-1/demo-onion:v$variable
-kubectl rolling-update demo-node --poll-interval="1us" --update-period="1us" --image=gcr.io/mitac-cust-gcp-1/demo-onion:v$variable
+time docker build -t asia.gcr.io/winter-wonder-647/demo-onion:v$variable .
+time gcloud docker push asia.gcr.io/winter-wonder-647/demo-onion:v$variable
+kubectl rolling-update demo-node --poll-interval="1us" --update-period="1us" --image=asia.gcr.io/winter-wonder-647/demo-onion:v$variable
 
