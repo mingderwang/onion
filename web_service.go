@@ -24,7 +24,7 @@ type OnionService struct {
 
 func (s *OnionService) getDb(cfg Config) (gorm.DB, error) {
 	db, err := gorm.Open("sqlite3", cfg.DbName)
-	//db.LogMode(true)
+	db.LogMode(true)
 	return db, err
 }
 
@@ -48,7 +48,7 @@ func (s *OnionService) Run(cfg Config) error {
 	onionResource := &OnionResource{db: db}
 
 	r := gin.Default()
-	//gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	r.Use(cors.Middleware(cors.Options{}))
 
 	r.GET("/onion", onionResource.GetAllOnions)

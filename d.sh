@@ -2,8 +2,6 @@
 set -o xtrace
 set -e
 
-echo "ming"
-
 typeset -i variable=$(cat version)
 ((variable=variable+1))
 echo $variable > version
@@ -14,10 +12,8 @@ FILE=Makefile
 
 if [ -f $FILE ];
 then
-   make clean
    echo "File $FILE exists."
+   make clean
 fi
 
-export GOPATH=/opt/go
-echo $GOPATH
-#/usr/local/go/bin/go generate
+

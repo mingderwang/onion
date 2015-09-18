@@ -88,11 +88,19 @@ func genJsonToGo(obj Onion) {
 }
 
 func dockerize(obj Onion) {
+       command3 := "id"
+       out3, err3 := exec.Command(command3).Output()
+       if err3 != nil {
+               log.Fatal(err3)
+	}
+	fmt.Printf("id is %s\n", out3)
        command1 := "pwd"
        out, err := exec.Command(command1).Output()
        if err != nil {
                log.Fatal(err)
 	}
+	fmt.Printf("1. pwd output is %s\n", out)
+
 	i := len(out) - 1
 	outstring := string(out[:i])
 	path := outstring + "/workspace/" + obj.DomainName + "." + obj.TypeName + "/onion"
@@ -101,7 +109,21 @@ func dockerize(obj Onion) {
 	if err2 != nil {
 		log.Fatal(err2)
 	}
-	fmt.Printf("The cmd is %s\n", out2)
+	fmt.Printf("2. run docker.sh output is %s\n", out2)
+
+	command6 := "pwd"
+	out6, err6 := exec.Command(command6).Output()
+	if err6 != nil {
+		log.Fatal(err6)
+	}
+	fmt.Printf("3. pwd output is %s\n", out6)
+
+	command4 := "./kubectl.sh"
+	out4, err4 := exec.Command(command4, path).Output()
+	if err4 != nil {
+		log.Fatal(err4)
+	}
+	fmt.Printf("4. run kubectl.sh output is %s\n", out4)
 }
 
 func writeFile(path string, fileName string, stream string) {
