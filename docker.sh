@@ -1,5 +1,6 @@
 #!/bin/bash
 set -o xtrace
+set -e
 
 typeset -i variable=$(cat version)
 ((variable=variable+1))
@@ -21,7 +22,7 @@ go generate
 #./dockerize.sh
 
 
-time docker build -t asia.gcr.io/winter-wonder-647/demo-onion:v$variable .
-time gcloud docker push asia.gcr.io/winter-wonder-647/demo-onion:v$variable
+docker build -t asia.gcr.io/winter-wonder-647/demo-onion:v$variable .
+gcloud docker push asia.gcr.io/winter-wonder-647/demo-onion:v$variable
 kubectl rolling-update demo-onion --poll-interval="1us" --update-period="1us" --image=asia.gcr.io/winter-wonder-647/demo-onion:v$variable
 

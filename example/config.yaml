@@ -2,4 +2,4 @@ svchost: :8080
 dbuser: root
 dbpassword: ""
 dbhost: localhost
-dbname: Onion.db
+dbname: ./Onion.db

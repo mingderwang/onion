@@ -23,7 +23,7 @@ type OnionService struct {
 }
 
 func (s *OnionService) getDb(cfg Config) (gorm.DB, error) {
-	db, err := gorm.Open("sqlite3", "./"+cfg.DbName)
+	db, err := gorm.Open("sqlite3", cfg.DbName)
 	//db.LogMode(true)
 	return db, err
 }

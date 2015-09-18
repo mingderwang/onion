@@ -88,12 +88,11 @@ func genJsonToGo(obj Onion) {
 }
 
 func dockerize(obj Onion) {
-	command1 := "pwd"
-	out, err := exec.Command(command1).Output()
-	if err != nil {
-		log.Fatal(err)
+       command1 := "pwd"
+       out, err := exec.Command(command1).Output()
+       if err != nil {
+               log.Fatal(err)
 	}
-	fmt.Printf("The pwd is %s\n", out)
 	i := len(out) - 1
 	outstring := string(out[:i])
 	path := outstring + "/workspace/" + obj.DomainName + "." + obj.TypeName + "/onion"
