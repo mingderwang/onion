@@ -1,6 +1,6 @@
 #! /bin/bash
 set -e
-set -o xtrace
+#set -o xtrace
 LOGFILE=/var/log/onion.log
 
 PIDFILE='/usr/local/var/run/onion'

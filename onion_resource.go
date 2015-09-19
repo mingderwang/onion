@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/mingderwang/pepper/jsonToGo"
 	"log"
+	"bytes"
 	"net/http"
 	"os"
 	"os/exec"
@@ -88,42 +89,29 @@ func genJsonToGo(obj Onion) {
 }
 
 func dockerize(obj Onion) {
-       command3 := "id"
-       out3, err3 := exec.Command(command3).Output()
-       if err3 != nil {
-               log.Fatal(err3)
-	}
-	fmt.Printf("id is %s\n", out3)
-       command1 := "pwd"
-       out, err := exec.Command(command1).Output()
-       if err != nil {
+        command1 := "pwd"
+        out, err := exec.Command(command1).Output()
+        if err != nil {
                log.Fatal(err)
 	}
-	fmt.Printf("1. pwd output is %s\n", out)
+        //fmt.Printf("1. pwd output is %s\n", out)
 
 	i := len(out) - 1
 	outstring := string(out[:i])
 	path := outstring + "/workspace/" + obj.DomainName + "." + obj.TypeName + "/onion"
-	command2 := "./docker.sh"
-	out2, err2 := exec.Command(command2, path).Output()
-	if err2 != nil {
-		log.Fatal(err2)
-	}
+
+	command2 := "./rolling_update.sh"
+	cmd2 := exec.Command(command2, path)
+        var out2 bytes.Buffer
+        var stderr2 bytes.Buffer
+        cmd2.Stdout = &out2
+        cmd2.Stderr = &stderr2
+        err2 := cmd2.Run()
+        if err2 != nil {
+            fmt.Println(fmt.Sprint(err2) + ": " + stderr2.String())
+            return
+        }
 	fmt.Printf("2. run docker.sh output is %s\n", out2)
-
-	command6 := "pwd"
-	out6, err6 := exec.Command(command6).Output()
-	if err6 != nil {
-		log.Fatal(err6)
-	}
-	fmt.Printf("3. pwd output is %s\n", out6)
-
-	command4 := "./kubectl.sh"
-	out4, err4 := exec.Command(command4, path).Output()
-	if err4 != nil {
-		log.Fatal(err4)
-	}
-	fmt.Printf("4. run kubectl.sh output is %s\n", out4)
 }
 
 func writeFile(path string, fileName string, stream string) {
