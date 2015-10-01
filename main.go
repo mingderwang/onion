@@ -16,7 +16,7 @@ import (
 )
 
 func defaultConfig() Config {
-	config := Config{":8080", "root", "", "localhost", "/opt/go/src/github.com/mingderwang/onion/Onion.db", "", ""}
+	config := Config{":8080", "root", "", "localhost", "/data/Onion.db", "", ""}
 	return config
 }
 
